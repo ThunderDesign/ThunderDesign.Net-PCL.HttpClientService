@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ThunderDesign.Net.HttpClientService.EventHandlers;
@@ -23,13 +24,62 @@ namespace ThunderDesign.Net.HttpClientService.Http
 
         public HttpClientAutoRedirect(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
         {
-            if (handler is HttpClientHandler)
-                _HttpClientHandler = handler as HttpClientHandler;
+            if (handler == null)
+                return;
+
+            //When you create your custom HttpMessageHandler include ICustomHttpMessageHandler to quickly read property values
+            if (handler is ICustomHttpMessageHandler customHttpMessageHandler)
+            {
+                this.CookieContainer = customHttpMessageHandler.CookieContainer ?? new CookieContainer();
+                this.UseCookies = customHttpMessageHandler.UseCookies;
+                this.AllowAutoRedirect = customHttpMessageHandler.AllowAutoRedirect;
+
+                //need to turn off AllowAutoRedirect since we are using our own
+                if (customHttpMessageHandler.AllowAutoRedirect)
+                    customHttpMessageHandler.AllowAutoRedirect = false;
+            }
+            //android will be HttpClientHandler, but ios won't. Recommend creating custom inherited class that uses ICustomHttpMessageHandler
+            else if (handler is HttpClientHandler httpClientHandler)
+            {
+                this.CookieContainer = httpClientHandler.CookieContainer ?? new CookieContainer();
+                this.UseCookies = httpClientHandler.UseCookies;
+                this.AllowAutoRedirect = httpClientHandler.AllowAutoRedirect;
+
+                //need to turn off AllowAutoRedirect since we are using our own
+                if (httpClientHandler.AllowAutoRedirect)
+                    httpClientHandler.AllowAutoRedirect = false;
+            }
+            //using reflection to read property values
+            else
+            {
+                PropertyInfo propertyInfo;
+                propertyInfo = handler.GetType().GetProperty(nameof(ICustomHttpMessageHandler.CookieContainer));
+                if (propertyInfo?.PropertyType == typeof(CookieContainer))
+                    this.CookieContainer = (CookieContainer)propertyInfo.GetValue(handler) ?? new CookieContainer();
+
+                propertyInfo = handler.GetType().GetProperty(nameof(ICustomHttpMessageHandler.UseCookies));
+                if (propertyInfo?.PropertyType == typeof(bool))
+                    this.UseCookies = (bool)propertyInfo.GetValue(handler);
+
+                propertyInfo = handler.GetType().GetProperty(nameof(ICustomHttpMessageHandler.AllowAutoRedirect));
+                if (propertyInfo?.PropertyType == typeof(bool))
+                    this.AllowAutoRedirect = (bool)propertyInfo.GetValue(handler);
+
+                if (this.AllowAutoRedirect)
+                    //need to turn off AllowAutoRedirect since we are using our own
+                    handler.GetType().GetProperty(nameof(ICustomHttpMessageHandler.AllowAutoRedirect)).SetValue(handler, false);
+            }
         }
         #endregion
 
         #region event handlers
-        public event CookieContainerChangedEventHandler? CookieContainerChangedEvent;
+        public event CookieContainerChangedEventHandler CookieContainerChangedEvent;
+        #endregion
+
+        #region properties
+        public bool UseCookies { get; private set; }
+        public bool AllowAutoRedirect { get; private set; }
+        public CookieContainer CookieContainer { get; private set; }
         #endregion
 
         #region methods
@@ -54,23 +104,25 @@ namespace ThunderDesign.Net.HttpClientService.Http
             task.Wait(cancellationToken);
             HttpResponseMessage responseMessage = task.Result;
 
-            if ((_HttpClientHandler?.UseCookies ?? false) && responseMessage.Headers.Contains("set-cookie"))
+            if (this.UseCookies && responseMessage.Headers.Contains("set-cookie"))
             {
-                _HttpClientHandler?.CookieContainer.SetCookies(responseMessage.Headers, responseMessage.RequestMessage.RequestUri.Host, CookieContainerChangedEvent);
+                this.CookieContainer?.SetCookies(responseMessage.Headers, responseMessage.RequestMessage.RequestUri.Host, CookieContainerChangedEvent);
             }
 
-            if ((_HttpClientHandler?.AllowAutoRedirect ?? false) && responseMessage.StatusCode == HttpStatusCode.Redirect && responseMessage.Headers.Contains("location"))
+            if (this.AllowAutoRedirect && Enumerable.Range(300, 399).Contains((int)responseMessage.StatusCode) && responseMessage.Headers.Contains("location"))
             {
                 if (responseMessage.Headers.TryGetValues("location", out var location))
                 {
-                    using HttpRequestMessage requestMessage = new HttpRequestMessage { Method = HttpMethod.Get, RequestUri = new Uri(location.Single()) };
-                    try
+                    using (HttpRequestMessage requestMessage = new HttpRequestMessage { Method = HttpMethod.Get, RequestUri = new Uri(location.Single()) })
                     {
-                        return SendAsync(requestMessage, cancellationToken);
-                    }
-                    finally
-                    {
-                        responseMessage.Dispose();
+                        try
+                        {
+                            return SendAsync(requestMessage, cancellationToken);
+                        }
+                        finally
+                        {
+                            responseMessage.Dispose();
+                        }
                     }
                 }
                 return task;
@@ -82,7 +134,6 @@ namespace ThunderDesign.Net.HttpClientService.Http
 
         #region variables
         private const HttpCompletionOption defaultCompletionOption = HttpCompletionOption.ResponseContentRead;
-        private readonly HttpClientHandler? _HttpClientHandler;
         #endregion
     }
 }
