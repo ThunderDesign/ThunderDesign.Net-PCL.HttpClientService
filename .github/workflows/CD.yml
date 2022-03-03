@@ -7,7 +7,7 @@ on:
 env:
   TITLE: "A wrapper around 'System.Net.Http.HttpClient'"
   DESCRIPTION: "A wrapper around 'System.Net.Http.HttpClient' enhancing AutoRedirect and Cookies. Can be used in all application types."
-  TAGS: "thunderdesign httpclient threading net"
+  TAGS: "thunderdesign visual%2Dstudio c%2Dsharp dotnet%2Dstandard dotnet%2Dframework dotnet%2Dcore cross%2Dplatform pcl%2Dlibrary mono xamarin%2Dforms xamarin%2Dandroid xamarin%2Dios xamarin%2Dmac xamarin%2Duwp unity csharp net dotnet httpclient httpmessagehandler threading"
   #FILE_NAME: ex: "ThunderDesign.Net-PCL.HttpClientService"
   FILE_NAME: "${{ github.event.repository.name }}"
   #REPOSITORY_NAME: ex: "ThunderDesign.Net-PCL.HttpClientService"
@@ -30,10 +30,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    - name: Setup .NET 3.0
+    - name: Setup .NET 2.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.0.x
+        dotnet-version: 2.0.x
         
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1

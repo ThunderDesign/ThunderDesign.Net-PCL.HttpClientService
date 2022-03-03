@@ -10,7 +10,7 @@ namespace ThunderDesign.Net.HttpClientService.Extentions
     public static class CookieContainerExtention
     {
         #region methods
-        static public void SetCookies(this CookieContainer cookieContainer, HttpHeaders httpHeaders, string defaultDomain, CookieContainerChangedEventHandler? handler = null)
+        static public void SetCookies(this CookieContainer cookieContainer, HttpHeaders httpHeaders, string defaultDomain, CookieContainerChangedEventHandler handler = null)
         {
             foreach (var header in httpHeaders)
             {
@@ -73,9 +73,11 @@ namespace ThunderDesign.Net.HttpClientService.Extentions
             }
 
             DateTime expiresDateTime;
-            if (expiresString != null)
+            if (!string.IsNullOrEmpty(expiresString))
             {
-                expiresDateTime = DateTime.Parse(expiresString);
+                if (!DateTime.TryParse(expiresString, out expiresDateTime))
+                    expiresDateTime = DateTime.MinValue;
+                //expiresDateTime = DateTime.Parse(expiresString);
             }
             else
             {

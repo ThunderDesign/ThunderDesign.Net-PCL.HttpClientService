@@ -2,7 +2,7 @@
 using ThunderDesign.Net.HttpClientService.Http;
 using ThunderDesign.Net.Threading.Objects;
 
-namespace HttpClientService.Core
+namespace ThunderDesign.Net.HttpClientService
 {
     public class HttpClientService : ThreadObject
     {
@@ -11,7 +11,7 @@ namespace HttpClientService.Core
         {
         }
 
-        public HttpClientService(HttpMessageHandler? httpClientHandler)
+        public HttpClientService(HttpMessageHandler httpClientHandler)
         {
             HttpClient = httpClientHandler != null ?
                 new HttpClientAutoRedirect(httpClientHandler) : new HttpClientAutoRedirect();
@@ -19,7 +19,7 @@ namespace HttpClientService.Core
         #endregion
 
         #region properties
-        public static HttpMessageHandler? DefaultHttpClientHandler
+        public static HttpMessageHandler DefaultHttpClientHandler
         {
             get { lock (_Locker) { return _DefaultHttpClientHandler; } }
             set { lock (_Locker) { _DefaultHttpClientHandler = value; } }
@@ -31,7 +31,7 @@ namespace HttpClientService.Core
             {
                 lock (_Locker)
                 {
-                    return _Instance ??= new HttpClientService();
+                    return _Instance ?? (_Instance = new HttpClientService());
                 }
             }
         }
@@ -44,8 +44,8 @@ namespace HttpClientService.Core
         #endregion
 
         #region variables
-        private static HttpClientService? _Instance = null;
-        private static HttpMessageHandler? _DefaultHttpClientHandler = null;
+        private static HttpClientService _Instance = null;
+        private static HttpMessageHandler _DefaultHttpClientHandler = null;
         #endregion
     }
 }

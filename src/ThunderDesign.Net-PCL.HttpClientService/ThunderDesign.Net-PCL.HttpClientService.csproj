@@ -1,13 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ThunderDesign.Net_PCL.HttpClientService</RootNamespace>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ThunderDesign.Net-PCL.Threading" Version="1.0.0" />
+    <PackageReference Include="ThunderDesign.Net-PCL.Threading" Version="1.0.5" />
   </ItemGroup>
 
 </Project>

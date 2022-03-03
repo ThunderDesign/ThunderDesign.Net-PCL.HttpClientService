@@ -9,7 +9,7 @@ namespace ThunderDesign.Net.HttpClientService.DataObjects
     {
         #region constructors
         public ResponseData() : base() { }
-        public ResponseData(HttpResponseMessage httpResponseMessage) : base() 
+        public ResponseData(HttpResponseMessage httpResponseMessage) : base()
         {
             _IsSuccessStatusCode = httpResponseMessage.IsSuccessStatusCode;
             _ReasonPhrase = httpResponseMessage.ReasonPhrase;
@@ -29,7 +29,7 @@ namespace ThunderDesign.Net.HttpClientService.DataObjects
             get { return this.GetProperty(ref _ReasonPhrase, _Locker); }
             set { this.SetProperty(ref _ReasonPhrase, value, _Locker); }
         }
-        
+
         public HttpStatusCode StatusCode
         {
             get { return this.GetProperty(ref _StatusCode, _Locker); }
