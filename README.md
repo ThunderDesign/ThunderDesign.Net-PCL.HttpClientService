@@ -34,6 +34,12 @@ Grab the latest [ThunderDesign.Net-PCL.HttpClientService NuGet](https://www.nuge
 
 Use the `-version` option to specify an [older version](https://www.nuget.org/packages/ThunderDesign.Net-PCL.HttpClientService#versions-tab) to install.
 
+## Examples
+
+*(TIP: Clone repo, open the solution, build it and run sample app.)*
+- Xamarin
+  - [SimpleHttpClient Example](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/tree/main/samples/Xamarin/SimpleHttpClient)
+
 ## Please Contribute!
 
 This is an open source project that welcomes contributions/suggestions/bug reports from those who use it. If you have any ideas on how to improve the library, please [post an issue here on GitHub](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/issues). Please check out the [How to Contribute](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/blob/main/.github/CONTRIBUTING.md).
