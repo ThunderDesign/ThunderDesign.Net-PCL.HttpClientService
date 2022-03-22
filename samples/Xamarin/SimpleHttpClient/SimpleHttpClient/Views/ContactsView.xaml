@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<b:BaseView
+    xmlns:b="clr-namespace:SimpleHttpClient.Views.Base"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Contacts"
+    x:Class="SimpleHttpClient.Views.ContactsView"
+    x:TypeArguments="vm:ContactsViewModel"
+    xmlns:v="clr-namespace:SimpleHttpClient.Views"
+    xmlns:vm="clr-namespace:SimpleHttpClient.ViewModels">
+    <ContentPage.Content>
+        <RefreshView Command="{Binding Source={RelativeSource AncestorType={x:Type v:ContactsView}}, Path=RefreshViewCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <CollectionView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                  ItemsSource="{Binding .}"
+                  BindingContext="{Binding Source={RelativeSource AncestorType={x:Type vm:ContactsViewModel}}, Path=ViewModelData}"
+                  SelectionMode="None" ItemsUpdatingScrollMode="KeepScrollOffset">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Span="1" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView Padding="2.5,10,2.5,10">
+                                <Frame BorderColor="LightGray"
+                                    HasShadow="True"
+                                    CornerRadius="22"
+                                   BackgroundColor="LightBlue"
+                                   Style="{StaticResource FrameGradient}">
+                                    <SwipeView BackgroundColor="Transparent" BindingContext="{Binding Value}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <Label 
+                                                Grid.Column="0" Grid.Row="0"
+                                                Text="{Binding FullName}"
+                                                LineBreakMode="NoWrap"
+                                                Style="{StaticResource LabelTitle}" 
+                                                Padding="15,10,5,10">
+                                            </Label>
+                                        </Grid>
+                                    </SwipeView>
+                                </Frame>
+                            </ContentView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+    </ContentPage.Content>
+</b:BaseView>
