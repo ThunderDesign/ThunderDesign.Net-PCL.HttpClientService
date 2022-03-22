@@ -49,6 +49,7 @@ namespace ThunderDesign.Net.HttpClientService.Http
                 if (httpClientHandler.AllowAutoRedirect)
                     httpClientHandler.AllowAutoRedirect = false;
             }
+#if NETSTANDARD2_0 || NETSTANDARD2_1
             //using reflection to read property values
             else
             {
@@ -69,6 +70,7 @@ namespace ThunderDesign.Net.HttpClientService.Http
                     //need to turn off AllowAutoRedirect since we are using our own
                     handler.GetType().GetProperty(nameof(ICustomHttpMessageHandler.AllowAutoRedirect)).SetValue(handler, false);
             }
+#endif
         }
         #endregion
 

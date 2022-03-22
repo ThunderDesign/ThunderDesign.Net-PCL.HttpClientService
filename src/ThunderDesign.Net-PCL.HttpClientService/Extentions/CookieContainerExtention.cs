@@ -20,8 +20,11 @@ namespace ThunderDesign.Net.HttpClientService.Extentions
                 foreach (var value in header.Value)
                 {
                     var cookieCollection = ParseCookieString(value, defaultDomain);
-
+#if NETSTANDARD2_0 || NETSTANDARD2_1
                     cookieContainer.Add(cookieCollection);
+#else
+                    cookieContainer.Add(new Uri(defaultDomain), cookieCollection);
+#endif
                     handler?.Invoke(cookieContainer, new CookieContainerChangedEventArgs(cookieCollection));
                 }
             }
@@ -102,6 +105,6 @@ namespace ThunderDesign.Net.HttpClientService.Extentions
             }
             return cookieCollection;
         }
-        #endregion
+#endregion
     }
 }

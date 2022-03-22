@@ -3,7 +3,7 @@
 [![CD](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/actions/workflows/CD.yml/badge.svg)](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/actions/workflows/CD.yml)
 [![Nuget](https://img.shields.io/nuget/v/ThunderDesign.Net-PCL.HttpClientService)](https://www.nuget.org/packages/ThunderDesign.Net-PCL.HttpClientService)
 [![License](https://img.shields.io/github/license/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService)](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/blob/main/LICENSE)
-[![Net](https://img.shields.io/badge/.net%20standard-2.0-blue)](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/blob/main/README.md)
+[![Net](https://img.shields.io/badge/.net%20standard-v1.1%20--%20v2.1-blue)](https://github.com/ThunderDesign/ThunderDesign.Net-PCL.HttpClientService/blob/main/README.md)
 
 A wrapper around 'System.Net.Http.HttpClient' enhancing AutoRedirect and Cookies. Can be used in all application types.
 
